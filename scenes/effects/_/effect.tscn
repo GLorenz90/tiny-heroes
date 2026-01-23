@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqtqaut8w423t"]
+
+[ext_resource type="Script" uid="uid://co3idws2b65di" path="res://scenes/effects/_/effect.gd" id="1_1xcoy"]
+
+[node name="Effect" type="Node2D"]
+z_index = 10
+z_as_relative = false
+script = ExtResource("1_1xcoy")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+reset_on_save = false
+
+[connection signal="animation_finished" from="Anim" to="." method="_on_anim_animation_finished"]

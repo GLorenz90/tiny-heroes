@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://rsclqkvvvl0y"]
+
+[ext_resource type="Script" uid="uid://bihp8p1hrdwu2" path="res://scenes/one_camera_controller.gd" id="1_8i4xg"]
+
+[node name="OneCameraView" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OneCameraController" type="Node2D" parent="."]
+z_index = 999
+z_as_relative = false
+script = ExtResource("1_8i4xg")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 0
+offset_right = 592.0
+offset_bottom = 256.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+disable_3d = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+size = Vector2i(592, 256)
+render_target_update_mode = 4
+
+[node name="P1Cam" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+position = Vector2(210, 180)
+limit_left = 0
+limit_top = 0
+limit_right = 592
+limit_bottom = 256
+position_smoothing_speed = 15.0

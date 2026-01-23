@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8pxy0jkmrllu"]
+
+[ext_resource type="PackedScene" uid="uid://b17dprv0ruoif" path="res://scenes/hazards/_/damage_area.tscn" id="1_y8usj"]
+[ext_resource type="Texture2D" uid="uid://c5r5qs3oue45a" path="res://images/ui/button_square_header_large_square_screws.png" id="2_elm81"]
+
+[node name="DamageArea" instance=ExtResource("1_y8usj")]
+resets_position = false
+
+[node name="Sprite" type="Sprite2D" parent="." index="1"]
+self_modulate = Color(1, 0, 0, 1)
+texture = ExtResource("2_elm81")

@@ -1,0 +1,101 @@
+[gd_scene load_steps=6 format=3 uid="uid://cs1mdw3a05ubj"]
+
+[ext_resource type="Texture2D" uid="uid://coiexbrot5rlp" path="res://images/ui/panel_grey_bolts_detail_c.png" id="1_60mby"]
+[ext_resource type="Script" uid="uid://bwc06uvwagl0m" path="res://scenes/menus/options_menu.gd" id="2_3aff8"]
+[ext_resource type="Theme" uid="uid://domdts7824yny" path="res://styles/theme_default.tres" id="2_ohqpn"]
+[ext_resource type="StyleBox" uid="uid://ch1y7bkde2bl5" path="res://styles/components/h_divider.tres" id="4_3aff8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_imvie"]
+texture = ExtResource("1_60mby")
+texture_margin_left = 18.0
+texture_margin_top = 18.0
+texture_margin_right = 18.0
+texture_margin_bottom = 18.0
+
+[node name="OptionsMenu" type="ScrollContainer" groups=["menu"]]
+offset_right = 266.0
+offset_bottom = 256.0
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_imvie")
+script = ExtResource("2_3aff8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MasterVolume" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/MasterVolume"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+text = "Master Volume"
+horizontal_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="VBoxContainer/MasterVolume"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+step = 5.0
+value = 50.0
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/MasterVolume"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("4_3aff8")
+
+[node name="MusicVolume" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/MusicVolume"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+text = "Music Volume"
+horizontal_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="VBoxContainer/MusicVolume"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+step = 5.0
+value = 50.0
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/MusicVolume"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("4_3aff8")
+
+[node name="EffectsVolume" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/EffectsVolume"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+text = "Effects Volume"
+horizontal_alignment = 1
+
+[node name="EffectsSlider" type="HSlider" parent="VBoxContainer/EffectsVolume"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+step = 5.0
+value = 50.0
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/EffectsVolume"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("4_3aff8")
+
+[node name="btnOptionsReset" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+theme = ExtResource("2_ohqpn")
+text = "Cancel"
+
+[node name="btnOptionsSaveReturn" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_ohqpn")
+text = "Accept"
+
+[connection signal="drag_ended" from="VBoxContainer/MasterVolume/MasterSlider" to="." method="_on_master_slider_drag_ended"]
+[connection signal="drag_ended" from="VBoxContainer/MusicVolume/MusicSlider" to="." method="_on_music_slider_drag_ended"]
+[connection signal="drag_ended" from="VBoxContainer/EffectsVolume/EffectsSlider" to="." method="_on_effects_slider_drag_ended"]
+[connection signal="pressed" from="VBoxContainer/btnOptionsReset" to="." method="_on_btn_options_reset_pressed"]
+[connection signal="pressed" from="VBoxContainer/btnOptionsSaveReturn" to="." method="_on_btn_options_save_return_pressed"]

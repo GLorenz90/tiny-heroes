@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b17dprv0ruoif"]
+
+[ext_resource type="Script" uid="uid://6e4nijgu46qa" path="res://scenes/hazards/_/damage_area.gd" id="1_bulo3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_34h3q"]
+size = Vector2(64, 64)
+
+[node name="DamageArea" type="Area2D" groups=["hazard"]]
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("1_bulo3")
+resets_position = true
+metadata/_custom_type_script = "uid://6e4nijgu46qa"
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -9.536743e-07)
+shape = SubResource("RectangleShape2D_34h3q")
