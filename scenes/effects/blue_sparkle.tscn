@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://j5pis8wxkkkq"]
+
+[ext_resource type="PackedScene" uid="uid://bqtqaut8w423t" path="res://scenes/effects/_/effect.tscn" id="1_2u2rm"]
+[ext_resource type="Texture2D" uid="uid://ckwhq21lxvyf1" path="res://images/effects/sparkle_blue.png" id="2_2u2rm"]
+
+[sub_resource type="Animation" id="Animation_a7xer"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_rd658"]
+resource_name = "sparkle"
+length = 0.26667336
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.20000002),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_g7p3r"]
+_data = {
+&"RESET": SubResource("Animation_a7xer"),
+&"sparkle": SubResource("Animation_rd658")
+}
+
+[node name="Effect" instance=ExtResource("1_2u2rm")]
+
+[node name="Sprite" parent="." index="0"]
+position = Vector2(0, -8)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_2u2rm")
+hframes = 4
+
+[node name="Anim" parent="." index="1"]
+libraries = {
+&"": SubResource("AnimationLibrary_g7p3r")
+}
+autoplay = "sparkle"

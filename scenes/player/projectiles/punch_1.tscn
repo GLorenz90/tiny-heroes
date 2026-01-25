@@ -1,0 +1,93 @@
+[gd_scene load_steps=7 format=3 uid="uid://c16k38eecuo8b"]
+
+[ext_resource type="PackedScene" uid="uid://bcjany3gn76as" path="res://scenes/player/_/player_projectile.tscn" id="1_bap6g"]
+[ext_resource type="Texture2D" uid="uid://cq68n8laxada2" path="res://images/effects/punch_1_effect.png" id="2_rw1a2"]
+
+[sub_resource type="Animation" id="Animation_c7cqx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DamageArea/Shape:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_dhx0u"]
+resource_name = "punch_1"
+length = 0.26667336
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.20000002),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DamageArea/Shape:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.20000002),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [true, false, false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tqm16"]
+_data = {
+&"RESET": SubResource("Animation_c7cqx"),
+&"punch_1": SubResource("Animation_dhx0u")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_841vc"]
+radius = 8.0
+height = 24.0
+
+[node name="punch_1" instance=ExtResource("1_bap6g")]
+animation = 1
+
+[node name="Sprite" parent="." index="0"]
+z_index = -1
+position = Vector2(-8, 0)
+texture = ExtResource("2_rw1a2")
+hframes = 4
+
+[node name="Anim" parent="." index="1"]
+root_node = NodePath("..")
+libraries = {
+&"": SubResource("AnimationLibrary_tqm16")
+}
+autoplay = "punch_1"
+
+[node name="DamageArea" parent="." index="2"]
+damage = 2
+
+[node name="Shape" parent="DamageArea" index="0"]
+shape = SubResource("CapsuleShape2D_841vc")
+disabled = true

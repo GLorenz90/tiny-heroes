@@ -4,24 +4,6 @@
 [ext_resource type="Shape2D" uid="uid://dxnajkbumilxf" path="res://resources/player_shape.tres" id="2_e1j0t"]
 [ext_resource type="Texture2D" uid="uid://cedyrtuag5yu" path="res://images/player/owlet-normal.png" id="3_s66ro"]
 
-[sub_resource type="Animation" id="Animation_e1j0t"]
-resource_name = "idle"
-length = 2.0000067
-loop_mode = 1
-step = 0.06666667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(1.4901161e-08, 0.06666667, 0.6666667, 0.73333335),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [55, 56, 57, 54]
-}
-
 [sub_resource type="Animation" id="Animation_s66ro"]
 length = 0.001
 tracks/0/type = "value"
@@ -49,22 +31,56 @@ tracks/1/keys = {
 "values": [Vector2i(0, 5)]
 }
 
-[sub_resource type="Animation" id="Animation_0icub"]
-resource_name = "running"
-length = 0.40000668
+[sub_resource type="Animation" id="Animation_f85ux"]
+resource_name = "falling"
+length = 0.20000668
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [22, 23, 24]
+}
+
+[sub_resource type="Animation" id="Animation_t1eku"]
+resource_name = "hurt"
+length = 0.73334
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.20000002, 0.33333334, 0.4666667, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [9, 10, 11, 10, 11, 12]
+}
+
+[sub_resource type="Animation" id="Animation_e1j0t"]
+resource_name = "idle"
+length = 2.0000067
 loop_mode = 1
 step = 0.06666667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame_coords")
+tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.2, 0.26666668, 0.33333334),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(1.4901161e-08, 0.06666667, 0.6666667, 0.73333335),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5), Vector2i(4, 5), Vector2i(5, 5)]
+"values": [55, 56, 57, 54]
 }
 
 [sub_resource type="Animation" id="Animation_ocp37"]
@@ -84,23 +100,6 @@ tracks/0/keys = {
 "values": [20, 21]
 }
 
-[sub_resource type="Animation" id="Animation_f85ux"]
-resource_name = "falling"
-length = 0.20000668
-step = 0.06666667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.13333334),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [22, 23, 24]
-}
-
 [sub_resource type="Animation" id="Animation_ryjgy"]
 resource_name = "punch_1"
 length = 0.26667336
@@ -112,10 +111,10 @@ tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.06666667, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [27, 28, 29, 30]
+"values": [27, 29, 30]
 }
 
 [sub_resource type="Animation" id="Animation_wvac4"]
@@ -129,27 +128,28 @@ tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(-1.4901161e-08, 0.06666667, 0.2, 0.26666668, 0.33333334),
+"times": PackedFloat32Array(-1.4901161e-08, 0.06666667, 0.13333334, 0.2, 0.33333334),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
 "values": [27, 28, 41, 31, 32]
 }
 
-[sub_resource type="Animation" id="Animation_t1eku"]
-resource_name = "hurt"
-length = 0.33334002
+[sub_resource type="Animation" id="Animation_0icub"]
+resource_name = "running"
+length = 0.40000668
+loop_mode = 1
 step = 0.06666667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
+tracks/0/path = NodePath(".:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.2, 0.26666668),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.2, 0.26666668, 0.33333334),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [9, 10, 11, 12]
+"values": [Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5), Vector2i(4, 5), Vector2i(5, 5)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_n4nw3"]
@@ -165,9 +165,11 @@ _data = {
 }
 
 [node name="PlayerCharacter" type="CharacterBody2D" groups=["player"]]
+z_index = 10
 collision_mask = 2
 slide_on_ceiling = false
 floor_block_on_wall = false
+floor_snap_length = 2.0
 safe_margin = 0.2
 script = ExtResource("1_56udc")
 
@@ -201,10 +203,12 @@ libraries = {
 autoplay = "idle"
 
 [node name="ProjectileAreas" type="Node2D" parent="."]
-scale = Vector2(-1, 1)
 
 [node name="Punch" type="Marker2D" parent="ProjectileAreas"]
-position = Vector2(-16, -11)
+position = Vector2(15, -10)
+
+[node name="Punch2" type="Marker2D" parent="ProjectileAreas"]
+position = Vector2(12, -10)
 
 [node name="EffectAreas" type="Node2D" parent="."]
 

@@ -1,66 +1,65 @@
-[gd_scene load_steps=6 format=3 uid="uid://bbjd8l1hool5u"]
+[gd_scene load_steps=8 format=3 uid="uid://bbjd8l1hool5u"]
 
-[ext_resource type="Script" uid="uid://dk0yfs26lt3rq" path="res://scenes/ui/hud.gd" id="1_xpwvb"]
-[ext_resource type="Texture2D" uid="uid://71wo4vjq70d4" path="res://images/ui/bar_round_large - Copy.png" id="2_xpwvb"]
-[ext_resource type="Texture2D" uid="uid://c3468u7bequr5" path="res://images/ui/bar_round_gloss_small - Copy.png" id="3_vas50"]
-[ext_resource type="Texture2D" uid="uid://cgufxp58i6guw" path="res://images/ui/button_square_header_small_square_screws.png" id="4_nhg7b"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oxl5d"]
-texture = ExtResource("3_vas50")
-texture_margin_left = 7.0
-texture_margin_top = 8.0
-texture_margin_right = 7.0
-texture_margin_bottom = 8.0
+[ext_resource type="Script" uid="uid://ql0mxim3hsan" path="res://scenes/ui/hud.gd" id="1_xpwvb"]
+[ext_resource type="Texture2D" uid="uid://dm30iu3xil105" path="res://images/ui/button_square_gradient.png" id="2_hqnrr"]
+[ext_resource type="Texture2D" uid="uid://qbycopj8sitg" path="res://images/player/bunny-normal.png" id="5_gss2c"]
+[ext_resource type="PackedScene" uid="uid://bwi4upr0emqso" path="res://scenes/ui/health_display.tscn" id="6_h022r"]
+[ext_resource type="Texture2D" uid="uid://c62hdn7aevui5" path="res://images/ui/coin.png" id="6_kicr4"]
+[ext_resource type="Texture2D" uid="uid://db6y45q0b7kde" path="res://images/player/seal-normal.png" id="7_4jqwt"]
+[ext_resource type="Theme" uid="uid://domdts7824yny" path="res://styles/theme_default.tres" id="7_mj13f"]
 
 [node name="HUD" type="Control"]
 z_index = 100
 z_as_relative = false
 layout_mode = 3
 anchors_preset = 0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 8.0
-offset_bottom = 8.0
 script = ExtResource("1_xpwvb")
 
-[node name="Health" type="NinePatchRect" parent="."]
-self_modulate = Color(0.658824, 0.658824, 0.658824, 1)
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 125.0
-offset_bottom = 32.0
-texture = ExtResource("2_xpwvb")
-patch_margin_left = 13
-patch_margin_top = 12
-patch_margin_right = 13
-patch_margin_bottom = 12
-
-[node name="HealthBar" type="ProgressBar" parent="Health"]
-custom_minimum_size = Vector2(80, 16)
+[node name="TextureRect" type="NinePatchRect" parent="."]
+self_modulate = Color(0.15, 0.15, 0.15, 1)
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 34.0
-offset_top = -8.0
-offset_right = 114.0
-offset_bottom = 8.0
-grow_vertical = 2
-theme_override_styles/fill = SubResource("StyleBoxTexture_oxl5d")
-max_value = 16.0
-step = 1.0
-value = 8.0
-rounded = true
-show_percentage = false
+offset_right = 592.0
+offset_bottom = 41.0
+texture = ExtResource("2_hqnrr")
+patch_margin_left = 8
+patch_margin_top = 9
+patch_margin_right = 8
+patch_margin_bottom = 8
 
-[node name="Anchor" type="NinePatchRect" parent="."]
-self_modulate = Color(0.66, 0.66, 0.66, 1)
+[node name="Coin" type="Sprite2D" parent="."]
+position = Vector2(452, 20)
+texture = ExtResource("6_kicr4")
+
+[node name="Label" type="Label" parent="."]
 layout_mode = 0
-offset_right = 35.0
-offset_bottom = 36.0
-texture = ExtResource("4_nhg7b")
-patch_margin_left = 13
-patch_margin_top = 18
-patch_margin_right = 13
-patch_margin_bottom = 13
+offset_left = 464.0
+offset_right = 580.0
+offset_bottom = 39.0
+theme = ExtResource("7_mj13f")
+text = "000000"
+vertical_alignment = 1
+
+[node name="P1Health" type="Node2D" parent="."]
+position = Vector2(9, 7)
+
+[node name="P1Char" type="Sprite2D" parent="P1Health"]
+position = Vector2(13, 10)
+texture = ExtResource("5_gss2c")
+hframes = 9
+vframes = 18
+
+[node name="P1HealthDisplay" parent="P1Health" instance=ExtResource("6_h022r")]
+position = Vector2(32, 5)
+
+[node name="P2Health" type="Node2D" parent="."]
+position = Vector2(160, 7)
+
+[node name="P2Char" type="Sprite2D" parent="P2Health"]
+position = Vector2(13, 10)
+texture = ExtResource("7_4jqwt")
+hframes = 9
+vframes = 18
+
+[node name="P2HealthDisplay" parent="P2Health" instance=ExtResource("6_h022r")]
+position = Vector2(32, 5)
+is_p1 = false

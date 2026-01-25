@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1w3lmnclmned"]
+
+[ext_resource type="Texture2D" uid="uid://c842ks36r7lhl" path="res://images/ui/health_heart.png" id="1_ibijm"]
+
+[node name="HeartDisplay" type="Sprite2D"]
+texture = ExtResource("1_ibijm")
+hframes = 3

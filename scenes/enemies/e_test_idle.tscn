@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3 uid="uid://dpo8b47c1tl26"]
+
+[ext_resource type="PackedScene" uid="uid://cbly53ty8crp6" path="res://scenes/enemies/_/enemy_parent.tscn" id="1_jj64c"]
+[ext_resource type="Texture2D" uid="uid://c0qapalogr5f3" path="res://images/enemies/ballooney.png" id="2_kihum"]
+
+[sub_resource type="Animation" id="Animation_63nr2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_6wklx"]
+resource_name = "idle"
+loop_mode = 1
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [1, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d8w2h"]
+_data = {
+&"RESET": SubResource("Animation_63nr2"),
+&"idle": SubResource("Animation_6wklx")
+}
+
+[node name="Ballooney" instance=ExtResource("1_jj64c")]
+
+[node name="Sprite" parent="." index="0"]
+position = Vector2(0, 5)
+texture = ExtResource("2_kihum")
+hframes = 2
+
+[node name="Anim" parent="." index="1"]
+libraries = {
+&"": SubResource("AnimationLibrary_d8w2h")
+}
+autoplay = "idle"

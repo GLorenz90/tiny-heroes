@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbly53ty8crp6"]
+
+[ext_resource type="Script" uid="uid://bwoj2gj5ki2iv" path="res://scenes/enemies/_/enemy_parent.gd" id="1_b3vho"]
+[ext_resource type="Shape2D" uid="uid://bal8fi8wf58t0" path="res://resources/small_enemy_shape.tres" id="1_ha2un"]
+[ext_resource type="PackedScene" uid="uid://ds45fijccs65g" path="res://scenes/effects/enemy_explode.tscn" id="2_n5ioc"]
+[ext_resource type="Script" uid="uid://6e4nijgu46qa" path="res://scenes/hazards/_/damage_area.gd" id="3_vkxyj"]
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_b3vho")
+death_scene = ExtResource("2_n5ioc")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+shape = ExtResource("1_ha2un")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
+[node name="InteractionArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="InteractionArea"]
+shape = ExtResource("1_ha2un")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
+[node name="DamageArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+priority = 1
+script = ExtResource("3_vkxyj")
+metadata/_custom_type_script = "uid://6e4nijgu46qa"
+
+[node name="Shape" type="CollisionShape2D" parent="DamageArea"]
+shape = ExtResource("1_ha2un")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
+[connection signal="area_entered" from="InteractionArea" to="." method="_on_interaction_area_area_entered"]

@@ -3,14 +3,18 @@
 [ext_resource type="Script" uid="uid://cnhpx0htsl18y" path="res://scenes/items/_/pickup.gd" id="1_lxvfp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8jrej"]
-radius = 6.0
-height = 12.0
+radius = 4.0
+height = 10.0
 
 [node name="Pickup" type="RigidBody2D"]
 collision_layer = 8
 collision_mask = 34
+lock_rotation = true
 script = ExtResource("1_lxvfp")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_8jrej")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -2)

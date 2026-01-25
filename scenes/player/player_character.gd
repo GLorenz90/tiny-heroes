@@ -6,16 +6,17 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity");
 const LERP_SPEED = 10.0;
 const MAX_ATTACK_STEP = 3;
 const owlet_sprites = preload("uid://cedyrtuag5yu");
-const bunny_sprites = preload("uid://cedyrtuag5yu");
+const bunny_sprites = preload("uid://qbycopj8sitg");
 const seal_sprites = preload("uid://db6y45q0b7kde");
 
 var jump_dust_scene: PackedScene = preload("uid://dmufl1i2pnrvo");
 
-var attack_punch_scene: PackedScene;
+var attack_punch_1_scene = preload("uid://c16k38eecuo8b");
+var attack_punch_2_scene = preload("uid://cirjrpfjm6q05")
 #endregion
 
 #region COMPUTED VARIABLES =========================================================================
-@export var isP1 := true;
+@export var is_p1 := true;
 var input_data := Global.main.templateInputBuffer;
 
 var coyote_time_remaining = CharStats.MAX_COYOTE_TIME;
@@ -39,13 +40,30 @@ var was_in_air := false;
 
 #region BUILT IN FUNCTIONS =========================================================================
 func _ready() -> void:
-  if(isP1):
+  if(is_p1):
     Global.p1_char = self;
     input_data = Global.main.p1InputBuffer;
+    
+    match(Global.p1_char_display):
+      Enums.CHARS.OWLET:
+        $Sprite/Sprites.texture = owlet_sprites;
+      Enums.CHARS.BUNNY:
+        $Sprite/Sprites.texture = bunny_sprites;
+      Enums.CHARS.SEAL:
+        $Sprite/Sprites.texture = seal_sprites;
+    # end match
   else:
     Global.p2_char = self;
-    $Sprite/Sprites.texture = bunny_sprites;
     input_data = Global.main.p2InputBuffer;
+    
+    match(Global.p2_char_display):
+      Enums.CHARS.OWLET:
+        $Sprite/Sprites.texture = owlet_sprites;
+      Enums.CHARS.BUNNY:
+        $Sprite/Sprites.texture = bunny_sprites;
+      Enums.CHARS.SEAL:
+        $Sprite/Sprites.texture = seal_sprites;
+    # end match
   # end if
 
   $DashTimer.wait_time = CharStats.TOTAL_ROLL_TIME;
@@ -85,7 +103,7 @@ func _physics_process(delta: float) -> void:
 
 #region RUNNING FUNCTIONS ==========================================================================
 func set_input_data() -> void:
-  input_data = Global.main.p1InputBuffer if isP1 else Global.main.p2InputBuffer;
+  input_data = Global.main.p1InputBuffer if is_p1 else Global.main.p2InputBuffer;
 # end set_input_data
 
 func check_safe_pos() -> void:
@@ -120,7 +138,7 @@ func check_is_in_damage_area() -> void:
 # end check_is_in_damage_area
 
 func take_damage(area: DamageArea) -> void:
-  if isP1:
+  if is_p1:
     CharStats.P1_CURRENT_HEALTH -= area.damage;
     # TODO: death check
   else:
@@ -416,7 +434,7 @@ func reset_jump_flags() -> void:
 
 func create_movement_effect(scene: PackedScene, location: Vector2):
   var new_scene = scene.instantiate();
-  new_scene.position = location;
+  new_scene.position = round(location);
   new_scene.scale.x *= $Sprite.scale.x;
   add_sibling(new_scene);
 # end create_movement_effect
@@ -429,13 +447,12 @@ func process_attack_state(_delta) -> void:
 
 func start_attacking() -> void:
   match(movement_state):
-    Enums.MOVEMENT_STATES.IDLE:
-      handle_standing_attack_combo();
+    Enums.MOVEMENT_STATES.IDLE, \
+    Enums.MOVEMENT_STATES.JUMPING, \
+    Enums.MOVEMENT_STATES.FALLING, \
     Enums.MOVEMENT_STATES.RUNNING:
       handle_standing_attack_combo();
-    Enums.MOVEMENT_STATES.INIT, \
-    Enums.MOVEMENT_STATES.JUMPING, \
-    Enums.MOVEMENT_STATES.FALLING:
+    Enums.MOVEMENT_STATES.INIT:
       pass;
   #end match
   $AttackTimer.wait_time = CharStats.ATTACK_TIMING[attack_state];
@@ -447,20 +464,23 @@ func start_attacking() -> void:
 
 func handle_standing_attack_combo() -> void:
   match(attack_state):
-    Enums.ATTACK_STATES.NONE:
+    Enums.ATTACK_STATES.NONE, \
+    Enums.ATTACK_STATES.PUNCH_2:
       attack_state = Enums.ATTACK_STATES.PUNCH_1;
-      create_attack_effect(attack_punch_scene, $ProjectileAreas/Punch.position);
+      create_attack_effect(attack_punch_1_scene, $ProjectileAreas/Punch.position);
+    Enums.ATTACK_STATES.PUNCH_1:
+      attack_state = Enums.ATTACK_STATES.PUNCH_2;
+      create_attack_effect(attack_punch_2_scene, $ProjectileAreas/Punch2.position, 1);
   # end match
   set_sprite_facing(true);
 # end handle_standing_attack_combo
 
-func create_attack_effect(scene: PackedScene, location: Vector2):
+func create_attack_effect(scene: PackedScene, location: Vector2, new_z: int = 0):
   var new_scene = scene.instantiate();
   new_scene.position = location;
   new_scene.position.x *= $Sprite.scale.x;
-  new_scene.modulate = CharStats.P1_roll_COLOR if isP1 else CharStats.P2_roll_COLOR;
-  new_scene.modulate.a = 1;
   new_scene.scale.x *= $Sprite.scale.x;
+  new_scene.z_index = new_z;
   add_child(new_scene);
 # end create_attack_effect
 
@@ -488,7 +508,6 @@ func set_sprite_facing(ignore_timer: bool = false) -> void:
     # end if
   # end if
   
-  $ProjectileAreas.scale.x = $Sprite.scale.x;
   $EffectAreas.scale.x = $Sprite.scale.x;
 # end set_sprite_facing
 
@@ -507,6 +526,8 @@ func update_sprite() -> void:
     match(attack_state):
       Enums.ATTACK_STATES.PUNCH_1:
          $Sprite/Anim.play("punch_1");
+      Enums.ATTACK_STATES.PUNCH_2:
+         $Sprite/Anim.play("punch_2");
     # end match
   else:
     match(movement_state):
@@ -537,13 +558,16 @@ func _on_hurt_timer_timeout() -> void:
 func _on_interaction_area_body_entered(body: Node2D) -> void:
   if (body is Pickup):
     var pickup: Pickup = body;
-    if pickup.health_value > 0:
-      if isP1:
+    if(body.health_value > 0):
+      if is_p1 && CharStats.P1_CURRENT_HEALTH < CharStats.TOTAL_MAX_HEALTH:
         CharStats.P1_CURRENT_HEALTH += pickup.health_value;
-      else:
+        body.destroy();
+      elif !is_p1 && CharStats.P2_CURRENT_HEALTH < CharStats.TOTAL_MAX_HEALTH:
         CharStats.P2_CURRENT_HEALTH += pickup.health_value;
+        body.destroy();
       # end if
-    # end if
-    body.queue_free();
+    else:
+      CharStats.CURRENT_MONEY += pickup.money_value;
+      body.destroy();
   # end if
 #endregion

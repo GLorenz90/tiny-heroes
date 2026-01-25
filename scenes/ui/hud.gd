@@ -1,26 +1,27 @@
 extends Control
 
-const color_good = Color("00d0ffff");
-const color_warning = Color("ffff00ff");
-const color_danger = Color("ff6f00ff");
+const owlet_sprites = preload("uid://cedyrtuag5yu");
+const bunny_sprites = preload("uid://qbycopj8sitg");
+const seal_sprites = preload("uid://db6y45q0b7kde");
 
-@onready var health_bar = $Health/HealthBar
+func _ready() -> void:
+  match(Global.p1_char_display):
+    Enums.CHARS.OWLET:
+      $P1Health/P1Char.texture = owlet_sprites;
+    Enums.CHARS.BUNNY:
+      $P1Health/P1Char.texture = bunny_sprites;
+    Enums.CHARS.SEAL:
+      $P1Health/P1Char.texture = seal_sprites;
+  
+  match(Global.p2_char_display):
+    Enums.CHARS.OWLET:
+      $P2Health/P2Char.texture = owlet_sprites;
+    Enums.CHARS.BUNNY:
+      $P2Health/P2Char.texture = bunny_sprites;
+    Enums.CHARS.SEAL:
+      $P2Health/P2Char.texture = seal_sprites;
+  # end match
+# end _ready
 
 func _process(_delta: float) -> void:
-  if Global.p1_char != null:
-    show();
-  else:
-    return;
-  # end
-  
-  # TODO: tween value with follow effect
-  health_bar.value = CharStats.P1_CURRENT_HEALTH;
-    
-  if(health_bar.value <= 3):
-    health_bar.self_modulate = color_danger;
-  elif(health_bar.value <= 7):
-    health_bar.self_modulate = color_warning;
-  else:
-    health_bar.self_modulate = color_good;
-  # end if
-# end _process
+  $Label.text = str(CharStats.CURRENT_MONEY);

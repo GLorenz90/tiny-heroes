@@ -32,12 +32,15 @@ var isViewSet = false;
 
 func _process(_delta: float) -> void:
   if(Global.main.sceneParent != null && !isViewSet):
-    viewMain = Global.main.sceneParent;
+    viewMain = Global.main.mainView;
     view1.world_2d = viewMain.world_2d;
     view2.world_2d = viewMain.world_2d;
     isViewSet = true;
     
   if(isViewSet && Global.p1_char != null && Global.p2_char != null):
+    camTarget1 = Global.p1_char;
+    camTarget2 = Global.p2_char;
+    
     prevNumPlayersInArea = numPlayersInArea;
     
     getnumPlayersInAreaInArea();
@@ -70,18 +73,7 @@ func _process(_delta: float) -> void:
     if((cam2DistToTarget < distThreshold) || cam2TargetBeyondLimit):
       cam2.position_smoothing_enabled = false;
     #end
-    setDebugText();
   #end
-#end
-
-func setDebugText() -> void:
-  Global.main.debugLabel.text = "cam1: " + str(cam1.get_screen_center_position()) + "\n" \
-    + "target1: " + str(camTarget1.global_position) + "\n" \
-    + "avg: " + str(Vector2(avgX, avgY));
-  
-  Global.main.debugLabel2.text = "cam2: " + str(cam2.get_screen_center_position()) + "\n" \
-    + "target2: " + str(camTarget2.global_position) + "\n" \
-    + "avg: " + str(Vector2(avgX, avgY));
 #end
 
 func changeMode() -> void:

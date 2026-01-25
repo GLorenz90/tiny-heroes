@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdktemyraobw7"
-path="res://.godot/imported/pink-monster-normal.png-cc16468eea4ef9fe0bb66b009ef02e05.ctex"
+uid="uid://bvv0f6rp1h34k"
+path="res://.godot/imported/poof_white.png-250e92811f85056dfd6661a2b3a0f8c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/player/pink-monster-normal.png"
-dest_files=["res://.godot/imported/pink-monster-normal.png-cc16468eea4ef9fe0bb66b009ef02e05.ctex"]
+source_file="res://images/effects/poof_white.png"
+dest_files=["res://.godot/imported/poof_white.png-250e92811f85056dfd6661a2b3a0f8c3.ctex"]
 
 [params]
 

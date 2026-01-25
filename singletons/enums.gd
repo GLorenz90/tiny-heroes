@@ -1,5 +1,11 @@
 extends Node
 
+enum CHARS {
+  OWLET,
+  BUNNY,
+  SEAL
+}
+
 enum STATE_POSITIONS {
   RUN,
   CHANGE

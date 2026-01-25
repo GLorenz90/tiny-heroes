@@ -2,8 +2,10 @@ extends Node
 
 #region COMPONENTS =============================================================
 var main: Main;
-var p1_char: Node2D;
-var p2_char: Node2D;
+var p1_char: PlayerCharacter;
+var p1_char_display: Enums.CHARS = Enums.CHARS.OWLET;
+var p2_char: PlayerCharacter;
+var p2_char_display: Enums.CHARS = Enums.CHARS.BUNNY;
 #endregion
 
 #region CONSTANTS ==============================================================

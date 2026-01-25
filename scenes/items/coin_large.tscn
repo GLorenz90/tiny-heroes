@@ -1,0 +1,69 @@
+[gd_scene load_steps=8 format=3 uid="uid://co82xg601lhq6"]
+
+[ext_resource type="PackedScene" uid="uid://cnhtcogr8pyah" path="res://scenes/items/_/pickup_parent.tscn" id="1_yth33"]
+[ext_resource type="PackedScene" uid="uid://yyvc7eai0owo" path="res://scenes/effects/yellow_sparkle.tscn" id="2_yr7sy"]
+[ext_resource type="Texture2D" uid="uid://bngysq12whahq" path="res://images/items/coin_large.png" id="2_yth33"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yth33"]
+radius = 8.0
+height = 16.0
+
+[sub_resource type="Animation" id="Animation_nv3kl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_nr3o8"]
+resource_name = "idle"
+length = 1.0000067
+loop_mode = 1
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.2, 0.26666668),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jho6q"]
+_data = {
+&"RESET": SubResource("Animation_nv3kl"),
+&"idle": SubResource("Animation_nr3o8")
+}
+
+[node name="CoinLarge" instance=ExtResource("1_yth33")]
+money_value = 10
+effect_scene = ExtResource("2_yr7sy")
+
+[node name="Shape" parent="." index="0"]
+position = Vector2(0, -8)
+shape = SubResource("CapsuleShape2D_yth33")
+
+[node name="Sprite" parent="." index="1"]
+position = Vector2(0, -8)
+texture = ExtResource("2_yth33")
+hframes = 4
+frame = 1
+
+[node name="Anim" type="AnimationPlayer" parent="." index="2"]
+reset_on_save = false
+libraries = {
+&"": SubResource("AnimationLibrary_jho6q")
+}
+autoplay = "idle"

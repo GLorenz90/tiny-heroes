@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctlmambgdug72"]
+
+[ext_resource type="Script" uid="uid://hsl7lxhgk83x" path="res://scenes/enemies/components/enemy_walk_component.gd" id="1_4ricg"]
+
+[node name="WalkComponent" type="Node2D"]
+script = ExtResource("1_4ricg")

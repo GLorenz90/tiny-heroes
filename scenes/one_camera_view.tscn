@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://rsclqkvvvl0y"]
+[gd_scene load_steps=5 format=3 uid="uid://rsclqkvvvl0y"]
 
 [ext_resource type="Script" uid="uid://bihp8p1hrdwu2" path="res://scenes/one_camera_controller.gd" id="1_8i4xg"]
+[ext_resource type="Texture2D" uid="uid://g4whg3lho6xy" path="res://images/levels/test/5 - Sky_color.png" id="2_tcg8f"]
+[ext_resource type="Texture2D" uid="uid://cg6gnr1g23twq" path="res://images/levels/test/4 - Background_clouds.png" id="3_ojhwf"]
+[ext_resource type="Texture2D" uid="uid://dchs05aiq6jf5" path="res://images/levels/test/1 - Waters_version_1.png" id="4_re625"]
 
 [node name="OneCameraView" type="Control"]
 layout_mode = 3
@@ -29,6 +32,44 @@ render_target_update_mode = 4
 position = Vector2(210, 180)
 limit_left = 0
 limit_top = 0
-limit_right = 592
 limit_bottom = 256
 position_smoothing_speed = 15.0
+
+[node name="StillBG" type="Parallax2D" parent="SubViewportContainer/SubViewport"]
+z_as_relative = false
+scroll_scale = Vector2(0, 0)
+
+[node name="Sprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/StillBG"]
+texture_repeat = 2
+position = Vector2(376, 111.99999)
+scale = Vector2(2.615604, 2.2854176)
+texture = ExtResource("2_tcg8f")
+
+[node name="FarBG" type="Parallax2D" parent="SubViewportContainer/SubViewport"]
+z_as_relative = false
+scroll_scale = Vector2(0.25, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/FarBG"]
+texture_repeat = 2
+position = Vector2(432, 128)
+texture = ExtResource("3_ojhwf")
+
+[node name="MidBG" type="Parallax2D" parent="SubViewportContainer/SubViewport"]
+z_as_relative = false
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/MidBG"]
+texture_repeat = 2
+position = Vector2(432, 152)
+texture = ExtResource("4_re625")
+
+[node name="NearBG" type="Parallax2D" parent="SubViewportContainer/SubViewport"]
+z_as_relative = false
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/NearBG"]
+texture_repeat = 2
+position = Vector2(432, 144)

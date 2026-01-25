@@ -3,8 +3,7 @@
 [ext_resource type="Script" uid="uid://co3idws2b65di" path="res://scenes/effects/_/effect.gd" id="1_1xcoy"]
 
 [node name="Effect" type="Node2D"]
-z_index = 10
-z_as_relative = false
+z_index = 11
 script = ExtResource("1_1xcoy")
 
 [node name="Sprite" type="Sprite2D" parent="."]

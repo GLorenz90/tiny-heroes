@@ -1,6 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://3rpiy63a7deb"]
+[gd_scene load_steps=6 format=3 uid="uid://3rpiy63a7deb"]
 
 [ext_resource type="Script" uid="uid://dkxadogsirwmr" path="res://scenes/two_camera_controller.gd" id="1_uccus"]
+[ext_resource type="Texture2D" uid="uid://g4whg3lho6xy" path="res://images/levels/test/5 - Sky_color.png" id="2_rw8ly"]
+[ext_resource type="Texture2D" uid="uid://cg6gnr1g23twq" path="res://images/levels/test/4 - Background_clouds.png" id="3_ai550"]
+[ext_resource type="Texture2D" uid="uid://dchs05aiq6jf5" path="res://images/levels/test/1 - Waters_version_1.png" id="4_yeqxt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tbgi4"]
 size = Vector2(400, 180)
@@ -29,7 +32,7 @@ position = Vector2(-210, 0)
 position = Vector2(210, 0)
 
 [node name="Bar" type="ColorRect" parent="."]
-z_index = 1000
+z_index = 100
 z_as_relative = false
 layout_mode = 0
 offset_left = 294.0
@@ -50,14 +53,57 @@ layout_mode = 2
 disable_3d = true
 handle_input_locally = false
 snap_2d_transforms_to_pixel = true
+canvas_cull_mask = 4294967291
 size = Vector2i(296, 256)
 render_target_update_mode = 4
+
+[node name="StillBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer/SubViewport"]
+visibility_layer = 2
+z_as_relative = false
+scroll_scale = Vector2(0, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer/SubViewport/StillBG"]
+texture_repeat = 2
+position = Vector2(376, 111.99999)
+scale = Vector2(2.615604, 2.2854176)
+texture = ExtResource("2_rw8ly")
+
+[node name="FarBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer/SubViewport"]
+visibility_layer = 2
+z_as_relative = false
+scroll_scale = Vector2(0.25, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer/SubViewport/FarBG"]
+texture_repeat = 2
+position = Vector2(432, 104)
+texture = ExtResource("3_ai550")
+
+[node name="MidBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer/SubViewport"]
+visibility_layer = 2
+z_as_relative = false
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer/SubViewport/MidBG"]
+texture_repeat = 2
+position = Vector2(432, 144)
+texture = ExtResource("4_yeqxt")
+
+[node name="NearBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer/SubViewport"]
+visibility_layer = 2
+z_as_relative = false
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer/SubViewport/NearBG"]
+texture_repeat = 2
+position = Vector2(432, 144)
 
 [node name="P1Cam" type="Camera2D" parent="HBoxContainer/SubViewportContainer/SubViewport"]
 position = Vector2(147, 128)
 limit_left = 0
 limit_top = 0
-limit_right = 592
 limit_bottom = 256
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0
@@ -69,14 +115,58 @@ layout_mode = 2
 disable_3d = true
 handle_input_locally = false
 snap_2d_transforms_to_pixel = true
+canvas_cull_mask = 4294967293
 size = Vector2i(296, 256)
 render_target_update_mode = 4
 
+[node name="StillBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer2/SubViewport"]
+visibility_layer = 4
+z_as_relative = false
+scroll_scale = Vector2(0, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer2/SubViewport/StillBG"]
+texture_repeat = 2
+position = Vector2(376, 111.99999)
+scale = Vector2(2.615604, 2.2854176)
+texture = ExtResource("2_rw8ly")
+
+[node name="FarBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer2/SubViewport"]
+visibility_layer = 4
+z_as_relative = false
+scroll_scale = Vector2(0.25, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer2/SubViewport/FarBG"]
+texture_repeat = 2
+position = Vector2(432, 104)
+texture = ExtResource("3_ai550")
+
+[node name="MidBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer2/SubViewport"]
+visibility_layer = 4
+z_as_relative = false
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer2/SubViewport/MidBG"]
+texture_repeat = 2
+position = Vector2(432, 144)
+texture = ExtResource("4_yeqxt")
+
+[node name="NearBG" type="Parallax2D" parent="HBoxContainer/SubViewportContainer2/SubViewport"]
+visibility_layer = 4
+z_as_relative = false
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(288, 0)
+
+[node name="Sprite" type="Sprite2D" parent="HBoxContainer/SubViewportContainer2/SubViewport/NearBG"]
+texture_repeat = 2
+position = Vector2(432, 144)
+
 [node name="P2Cam" type="Camera2D" parent="HBoxContainer/SubViewportContainer2/SubViewport"]
+visibility_layer = 2
 position = Vector2(148, 128)
 limit_left = 0
 limit_top = 0
-limit_right = 592
 limit_bottom = 256
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0

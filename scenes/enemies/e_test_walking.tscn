@@ -1,0 +1,107 @@
+[gd_scene load_steps=9 format=3 uid="uid://h6mb8r0umtcw"]
+
+[ext_resource type="PackedScene" uid="uid://cbly53ty8crp6" path="res://scenes/enemies/_/enemy_parent.tscn" id="1_r885n"]
+[ext_resource type="Texture2D" uid="uid://dm1fq8p2i7q8v" path="res://images/enemies/octi.png" id="2_31wrh"]
+[ext_resource type="PackedScene" uid="uid://ctlmambgdug72" path="res://scenes/enemies/components/enemy_walk_component.tscn" id="3_mdn2g"]
+
+[sub_resource type="Animation" id="Animation_lffve"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+
+[sub_resource type="Animation" id="Animation_30q6n"]
+resource_name = "idle"
+length = 0.50005
+loop_mode = 1
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_fdb4o"]
+resource_name = "moving"
+length = 1.00005
+loop_mode = 1
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ptq8g"]
+_data = {
+&"RESET": SubResource("Animation_lffve"),
+&"idle": SubResource("Animation_30q6n"),
+&"moving": SubResource("Animation_fdb4o")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qmvn4"]
+size = Vector2(2, 8)
+
+[node name="Blobby" instance=ExtResource("1_r885n")]
+
+[node name="Sprite" parent="." index="0"]
+position = Vector2(0, -2)
+scale = Vector2(-1, 1)
+texture = ExtResource("2_31wrh")
+hframes = 2
+
+[node name="Anim" parent="." index="1"]
+libraries = {
+&"": SubResource("AnimationLibrary_ptq8g")
+}
+autoplay = "idle"
+
+[node name="PhysicsShape" parent="." index="2"]
+rotation = -1.5707964
+
+[node name="WalkComponent" parent="." index="5" node_paths=PackedStringArray("animationPlayer", "left_edge_raycast", "right_edge_raycast", "wall_shapecast") instance=ExtResource("3_mdn2g")]
+position = Vector2(0, -4)
+move_speed = 20.0
+animationPlayer = NodePath("../Anim")
+left_edge_raycast = NodePath("../EdgeLeft")
+right_edge_raycast = NodePath("../EdgeRight")
+wall_shapecast = NodePath("../WallCheck")
+
+[node name="EdgeLeft" type="RayCast2D" parent="." index="6"]
+position = Vector2(-7, 4)
+target_position = Vector2(0, 10)
+collision_mask = 2
+
+[node name="EdgeRight" type="RayCast2D" parent="." index="7"]
+position = Vector2(7, 4)
+target_position = Vector2(0, 10)
+collision_mask = 2
+
+[node name="WallCheck" type="ShapeCast2D" parent="." index="8"]
+position = Vector2(7, 0)
+shape = SubResource("RectangleShape2D_qmvn4")
+target_position = Vector2(0, 0)
+collision_mask = 2
