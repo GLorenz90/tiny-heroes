@@ -2,6 +2,9 @@ extends Node
 
 #region COMPONENTS =============================================================
 var main: Main;
+var device_manager: DeviceManager;
+var input_manager: InputManager;
+var debug_label: Control;
 var p1_char: PlayerCharacter;
 var p1_char_display: Enums.CHARS = Enums.CHARS.OWLET;
 var p2_char: PlayerCharacter;

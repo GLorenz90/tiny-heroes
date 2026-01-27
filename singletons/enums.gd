@@ -1,5 +1,11 @@
 extends Node
 
+enum INPUT_SOURCES {
+  UNASSIGNED,
+  KEYBOARD,
+  CONTROLLER
+}
+
 enum CHARS {
   OWLET,
   BUNNY,
@@ -11,13 +17,16 @@ enum STATE_POSITIONS {
   CHANGE
 }
 
-#TODO: Rolling, Crouching, Ladder, Hanging
 enum MOVEMENT_STATES {
   INIT,
   IDLE,
   RUNNING,
   JUMPING,
   FALLING,
+  CROUCHING,
+  ROLLING,
+  HANGING,
+  LADDER,
   HURT
 }
 

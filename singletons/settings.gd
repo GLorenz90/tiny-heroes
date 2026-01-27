@@ -15,6 +15,9 @@ var defaultAntialiasing: Viewport.MSAA = Viewport.MSAA.MSAA_4X;
 
 var antialiasing := defaultAntialiasing;
 
+var default_stick_deadzone := 0.25
+var stick_deadzone := default_stick_deadzone;
+
 var config = ConfigFile.new();
 
 func _init():
@@ -27,9 +30,11 @@ func saveSettingsFile():
   config.set_value("audio", "music_volume", musicVolume);
   
   config.set_value("visual", "antialiasing", antialiasing);
+  
+  config.set_value("input", "stick_deadzone", stick_deadzone);
   config.save(settingsFilePath);
   updateAudioBusses();
-# end loadSettings
+# end saveSettingsFile
 
 func loadSettingsFile():
   var fileLoadStatus = config.load(settingsFilePath);
@@ -39,8 +44,11 @@ func loadSettingsFile():
     musicVolume = config.get_value("audio", "music_volume", defaultMusicVolume);
     
     antialiasing = config.get_value("visual", "antialiasing", defaultAntialiasing);
+  
+    antialiasing = config.get_value("input", "stick_deadzone", default_stick_deadzone);
     updateAudioBusses();
-# end loadSettings
+  # end if
+# end loadSettingsFile
 
 func updateAudioBusses():
   var masterIndex = AudioServer.get_bus_index("Master");
@@ -64,5 +72,8 @@ func resetToDefault():
   masterVolume = defaultMasterVolume;
   effectsVolume = defaultEffectsVolume;
   musicVolume = defaultMusicVolume;
+  antialiasing = defaultAntialiasing;
+  stick_deadzone = default_stick_deadzone;
   updateAudioBusses();
+# end resetToDefault
 #endregion

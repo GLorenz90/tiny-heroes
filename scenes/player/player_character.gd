@@ -17,7 +17,7 @@ var attack_punch_2_scene = preload("uid://cirjrpfjm6q05")
 
 #region COMPUTED VARIABLES =========================================================================
 @export var is_p1 := true;
-var input_data := Global.main.templateInputBuffer;
+var input_data := Global.input_manager.template_input_buffer;
 
 var coyote_time_remaining = CharStats.MAX_COYOTE_TIME;
 
@@ -42,7 +42,6 @@ var was_in_air := false;
 func _ready() -> void:
   if(is_p1):
     Global.p1_char = self;
-    input_data = Global.main.p1InputBuffer;
     
     match(Global.p1_char_display):
       Enums.CHARS.OWLET:
@@ -54,7 +53,6 @@ func _ready() -> void:
     # end match
   else:
     Global.p2_char = self;
-    input_data = Global.main.p2InputBuffer;
     
     match(Global.p2_char_display):
       Enums.CHARS.OWLET:
@@ -103,7 +101,7 @@ func _physics_process(delta: float) -> void:
 
 #region RUNNING FUNCTIONS ==========================================================================
 func set_input_data() -> void:
-  input_data = Global.main.p1InputBuffer if is_p1 else Global.main.p2InputBuffer;
+  input_data = Global.input_manager.p1_input_buffer if is_p1 else Global.input_manager.p2_input_buffer;
 # end set_input_data
 
 func check_safe_pos() -> void:
