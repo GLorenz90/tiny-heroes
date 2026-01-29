@@ -6,8 +6,8 @@ var assigned_devices := [];
 
 # Player device assignments
 var player_devices := {
-  1: {"type": Enums.INPUT_SOURCES.CONTROLLER, "device_id": 0},
-  2: {"type": Enums.INPUT_SOURCES.UNASSIGNED, "device_id": -1}
+  1: {"type": Enums.INPUT_SOURCES.KEYBOARD, "device_id": -1},
+  2: {"type": Enums.INPUT_SOURCES.CONTROLLER, "device_id": 0}
 }
 
 #region BUILT-IN ===================================================================================
@@ -16,7 +16,7 @@ func _ready() -> void:
   Input.joy_connection_changed.connect(_on_joy_connection_changed);
   
   print("p1_device: T:" + Enums.INPUT_SOURCES.keys()[player_devices[1].type] + " IDX:" + str(player_devices[1].device_id));
-  print("p1_device: T:" + Enums.INPUT_SOURCES.keys()[player_devices[2].type] + " IDX:" + str(player_devices[2].device_id));
+  print("p2_device: T:" + Enums.INPUT_SOURCES.keys()[player_devices[2].type] + " IDX:" + str(player_devices[2].device_id));
 # end _ready
 
 #region FUNCTIONS ==================================================================================

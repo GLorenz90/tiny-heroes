@@ -172,9 +172,6 @@ func process_movement_state(delta) -> void:
   # end match
 #end process_movement_state
 
-#TODO:
-  #CROUCHING,
-  #LADDER,
 func process_movement_starting_state(delta) -> void:
   match(movement_state):
     Enums.MOVEMENT_STATES.INIT:
@@ -187,6 +184,12 @@ func process_movement_starting_state(delta) -> void:
       start_movement_jumping_state(delta);
     Enums.MOVEMENT_STATES.FALLING:
       start_movement_falling_state(delta);
+    Enums.MOVEMENT_STATES.CROUCHING:
+      pass;
+    Enums.MOVEMENT_STATES.ROLLING:
+      pass;
+    Enums.MOVEMENT_STATES.LADDER:
+      pass;
     Enums.MOVEMENT_STATES.HURT:
       start_movement_hurt_state(delta);
   #end match
@@ -204,6 +207,12 @@ func process_movement_running_state(delta) -> void:
       run_movement_jumping_state(delta);
     Enums.MOVEMENT_STATES.FALLING:
       run_movement_falling_state(delta);
+    Enums.MOVEMENT_STATES.CROUCHING:
+      pass;
+    Enums.MOVEMENT_STATES.ROLLING:
+      pass;
+    Enums.MOVEMENT_STATES.LADDER:
+      pass;
     Enums.MOVEMENT_STATES.HURT:
       run_movement_hurt_state(delta);
   #end match
@@ -221,6 +230,12 @@ func process_movement_ending_state(delta) -> void:
       end_movement_jumping_state(delta);
     Enums.MOVEMENT_STATES.FALLING:
       end_movement_falling_state(delta);
+    Enums.MOVEMENT_STATES.CROUCHING:
+      pass;
+    Enums.MOVEMENT_STATES.ROLLING:
+      pass;
+    Enums.MOVEMENT_STATES.LADDER:
+      pass;
     Enums.MOVEMENT_STATES.HURT:
       end_movement_hurt_state(delta);
   #end match

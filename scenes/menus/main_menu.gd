@@ -25,19 +25,19 @@ func showMenu() -> void:
 #end showMenu
 
 func removeMenu() -> void:
-  Global.main.mainMenu = null;
+  Global.main.main_menu = null;
   get_parent().remove_child(self);
   queue_free();
 #end showMenu
 
 func _on_btn_start_game_pressed() -> void:
   removeMenu();
-  Global.main.startGame();
+  Global.main.start_game();
 # end _on_btn_start_game_pressed
 
 func _on_btn_options_pressed() -> void:
   toggleActive();
-  Global.main.optionsMenu.showMenu();
+  Global.main.options_menu.showMenu();
 #end _on_btn_options_pressed
 
 func _on_btn_quit_game_pressed() -> void:

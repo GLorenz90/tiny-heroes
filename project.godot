@@ -22,6 +22,7 @@ Enums="*res://singletons/enums.gd"
 Signals="*res://singletons/signals.gd"
 Settings="*res://singletons/settings.gd"
 CharStats="*res://singletons/char_stats.gd"
+Preloads="*res://singletons/preloads.gd"
 
 [display]
 

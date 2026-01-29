@@ -14,9 +14,6 @@ var cam1TargetBeyondLimit := false;
 var cam2TargetBeyondLimit := false;
 var isViewSet = false;
 
-#outside view
-@onready var viewMain: SubViewport = Global.main.mainView;
-
 #inside view
 @onready var cam1: Camera2D = $"../HBoxContainer/SubViewportContainer/SubViewport/P1Cam";
 @onready var cam2: Camera2D = $"../HBoxContainer/SubViewportContainer2/SubViewport/P2Cam";
@@ -30,11 +27,14 @@ var isViewSet = false;
 @onready var viewportHeight: int = view1.size.y;
 @onready var viewportWidth: int = view1.size.x;
 
+func _ready() -> void:
+  Global.p1_cam = cam1;
+  Global.p2_cam = cam2;
+  
 func _process(_delta: float) -> void:
-  if(Global.main.sceneParent != null && !isViewSet):
-    viewMain = Global.main.mainView;
-    view1.world_2d = viewMain.world_2d;
-    view2.world_2d = viewMain.world_2d;
+  if(Global.main.scene_parent != null && !isViewSet):
+    view1.world_2d = Global.main.main_view.world_2d;
+    view2.world_2d = Global.main.main_view.world_2d;
     isViewSet = true;
     
   if(isViewSet && Global.p1_char != null && Global.p2_char != null):
@@ -55,7 +55,9 @@ func _process(_delta: float) -> void:
     #end
     
     cam1.global_position = camTarget1.global_position;
+    cam1.global_position.y -= 64;
     cam2.global_position = camTarget2.global_position;
+    cam2.global_position.y -= 64;
     
     cam1DistToTarget = abs(camTarget1.global_position.y - cam1.get_screen_center_position().y);
     cam2DistToTarget = abs(camTarget2.global_position.y - cam2.get_screen_center_position().y);
@@ -111,10 +113,5 @@ func changeMode() -> void:
 #end
 
 func getnumPlayersInAreaInArea() -> void:
-  numPlayersInArea = 0;
-  for body in $Area2D.get_overlapping_bodies():
-    if(body.is_in_group("player")):
-      numPlayersInArea += 1;
-    #end
-  #end
+  numPlayersInArea = $Area2D.get_overlapping_bodies().size();
 #end

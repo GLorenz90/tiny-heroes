@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://biv76ds6kbuu5"]
+[gd_scene load_steps=9 format=3 uid="uid://biv76ds6kbuu5"]
 
 [ext_resource type="Script" uid="uid://bh0iwl5w44bxo" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://cjf0bh36icbl3" path="res://scenes/menus/main_menu.tscn" id="2_1bvp3"]
 [ext_resource type="Script" uid="uid://7k05lb2n6sdo" path="res://input_manager.gd" id="3_272bh"]
 [ext_resource type="PackedScene" uid="uid://cs1mdw3a05ubj" path="res://scenes/menus/options_menu.tscn" id="3_lquwl"]
+[ext_resource type="PackedScene" uid="uid://ojudops73e8s" path="res://scenes/music_manager.tscn" id="4_5vw27"]
 [ext_resource type="PackedScene" uid="uid://bxh1gewhoevqo" path="res://scenes/menus/controls_menu.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://bbjd8l1hool5u" path="res://scenes/ui/hud.tscn" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://b4qer3ujcr1ll" path="res://device_manager.gd" id="6_7mycd"]
@@ -16,6 +17,8 @@ script = ExtResource("6_7mycd")
 
 [node name="InputHandler" type="Node" parent="."]
 script = ExtResource("3_272bh")
+
+[node name="MusicManager" parent="." instance=ExtResource("4_5vw27")]
 
 [node name="DebugLabel" type="Label" parent="."]
 z_index = 4096

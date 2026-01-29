@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://ojudops73e8s"]
+
+[ext_resource type="Script" uid="uid://nldr52emxvrh" path="res://scenes/music_manager.gd" id="1_tn5dr"]
+[ext_resource type="AudioStream" uid="uid://dsgoon3pqjgld" path="res://audio/music/01 Main Theme_spc.mp3" id="2_hetdf"]
+
+[node name="MusicManager" type="Node"]
+script = ExtResource("1_tn5dr")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_hetdf")
+autoplay = true
+bus = &"Music"
+parameters/looping = true
+
+[connection signal="finished" from="MusicPlayer" to="." method="_on_audio_stream_player_2d_finished"]

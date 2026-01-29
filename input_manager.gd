@@ -93,27 +93,27 @@ func _process(delta) -> void:
 # end _ready
 
 func setup_default_controls() -> void:
-  set_joypad_axis_action(1, INPUTS.UP, JOY_AXIS_LEFT_Y, -1.0);
-  set_joypad_axis_action(1, INPUTS.DOWN, JOY_AXIS_LEFT_Y, 1.0);
-  set_joypad_axis_action(1, INPUTS.LEFT, JOY_AXIS_LEFT_X, -1.0);
-  set_joypad_axis_action(1, INPUTS.RIGHT, JOY_AXIS_LEFT_X, 1.0);
+  set_key_action(1, INPUTS.UP, KEY_W);
+  set_key_action(1, INPUTS.DOWN, KEY_S);
+  set_key_action(1, INPUTS.LEFT, KEY_A);
+  set_key_action(1, INPUTS.RIGHT, KEY_D);
   set_key_action(1, INPUTS.JUMP, KEY_SPACE);
   set_key_action(1, INPUTS.ATTACK, KEY_Q);
-  set_key_action(1, INPUTS.INTERACT, KEY_W);
+  set_key_action(1, INPUTS.INTERACT, KEY_E);
   set_key_action(1, INPUTS.PAUSE, KEY_TAB);
-  set_key_action(1, INPUTS.ACCEPT, KEY_Q);
-  set_key_action(1, INPUTS.CANCEL, KEY_SPACE);
+  set_key_action(1, INPUTS.ACCEPT, KEY_ENTER);
+  set_key_action(1, INPUTS.CANCEL, KEY_BACKSPACE);
   
-  set_key_action(2, INPUTS.UP, KEY_UP);
-  set_key_action(2, INPUTS.DOWN, KEY_DOWN);
-  set_key_action(2, INPUTS.LEFT, KEY_LEFT);
-  set_key_action(2, INPUTS.RIGHT, KEY_RIGHT);
-  set_key_action(2, INPUTS.JUMP, KEY_SLASH);
-  set_key_action(2, INPUTS.ATTACK, KEY_PERIOD);
-  set_key_action(2, INPUTS.INTERACT, KEY_UP);
-  set_key_action(2, INPUTS.PAUSE, KEY_ENTER);
-  set_key_action(2, INPUTS.ACCEPT, KEY_PERIOD);
-  set_key_action(2, INPUTS.CANCEL, KEY_SLASH);
+  set_joypad_button_action(2, INPUTS.UP, JOY_BUTTON_DPAD_UP);
+  set_joypad_button_action(2, INPUTS.DOWN, JOY_BUTTON_DPAD_DOWN);
+  set_joypad_button_action(2, INPUTS.LEFT, JOY_BUTTON_DPAD_LEFT);
+  set_joypad_button_action(2, INPUTS.RIGHT, JOY_BUTTON_DPAD_RIGHT);
+  set_joypad_button_action(2, INPUTS.JUMP, JOY_BUTTON_A);
+  set_joypad_button_action(2, INPUTS.ATTACK, JOY_BUTTON_X);
+  set_joypad_button_action(2, INPUTS.INTERACT, JOY_BUTTON_Y);
+  set_joypad_button_action(2, INPUTS.PAUSE, JOY_BUTTON_START);
+  set_joypad_button_action(2, INPUTS.ACCEPT, JOY_BUTTON_A);
+  set_joypad_button_action(2, INPUTS.CANCEL, JOY_BUTTON_B);
   # end if
 # end setup_default_controls
 

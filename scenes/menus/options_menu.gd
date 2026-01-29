@@ -58,15 +58,15 @@ func animateMenu(newPosition: Vector2, tweenCallback: Callable = Callable()) -> 
 func _on_btn_options_reset_pressed() -> void:
   loadFromFile();
   hideMenu();
-  if(Global.main.mainMenu != null):
-    Global.main.mainMenu.showMenu();
+  if(Global.main.main_menu != null):
+    Global.main.main_menu.showMenu();
 # end _on_btn_options_reset_pressed
   
 func _on_btn_options_save_return_pressed() -> void:
   Settings.saveSettingsFile();
   hideMenu();
-  if(Global.main.mainMenu != null):
-    Global.main.mainMenu.showMenu();
+  if(Global.main.main_menu != null):
+    Global.main.main_menu.showMenu();
 # end _on_btn_options_return_pressed
 #endregion
 
