@@ -9,10 +9,14 @@ const owlet_sprites = preload("uid://cedyrtuag5yu");
 const bunny_sprites = preload("uid://qbycopj8sitg");
 const seal_sprites = preload("uid://db6y45q0b7kde");
 
+const standing_shape: Shape2D = preload("uid://dxnajkbumilxf");
+const crouching_shape: Shape2D = preload("uid://c5cw3ra537wn1");
+
 var jump_dust_scene: PackedScene = preload("uid://dmufl1i2pnrvo");
 
 var attack_punch_1_scene = preload("uid://c16k38eecuo8b");
-var attack_punch_2_scene = preload("uid://cirjrpfjm6q05")
+var attack_punch_2_scene = preload("uid://cirjrpfjm6q05");
+var dash_driection := 1;
 #endregion
 
 #region COMPUTED VARIABLES =========================================================================
@@ -64,7 +68,7 @@ func _ready() -> void:
     # end match
   # end if
 
-  $DashTimer.wait_time = CharStats.TOTAL_ROLL_TIME;
+  $RollTimer.wait_time = CharStats.TOTAL_ROLL_TIME;
   $JumpTimer.wait_time = CharStats.TOTAL_JUMP_TIME;
 
   $HurtTimer.wait_time = CharStats.HURT_TIME;
@@ -73,7 +77,6 @@ func _ready() -> void:
 # end _init
 
 func _physics_process(delta: float) -> void:
-  #set_debug_text();
   if(!is_on_floor() && coyote_time_remaining > 0.0):
     coyote_time_remaining = max(0.0, coyote_time_remaining - delta);
   # end if
@@ -96,6 +99,12 @@ func _physics_process(delta: float) -> void:
   # prevent blur when standing still.
   if(velocity.x == 0.0 && velocity.y == 0.0):
     global_position = round(self.global_position);
+    
+  if is_p1:
+    Global.p1_debug_label.text = Enums.MOVEMENT_STATES.keys()[movement_state];
+  else:
+    Global.p2_debug_label.text = Enums.MOVEMENT_STATES.keys()[movement_state];
+  # end if
 # end _physics_process
 #endregion
 
@@ -185,11 +194,13 @@ func process_movement_starting_state(delta) -> void:
     Enums.MOVEMENT_STATES.FALLING:
       start_movement_falling_state(delta);
     Enums.MOVEMENT_STATES.CROUCHING:
-      pass;
+      start_movement_crouching_state(delta);
     Enums.MOVEMENT_STATES.ROLLING:
-      pass;
+      start_movement_rolling_state(delta);
     Enums.MOVEMENT_STATES.LADDER:
-      pass;
+      start_movement_ladder_state(delta);
+    Enums.MOVEMENT_STATES.HANGING:
+      start_movement_hanging_state(delta);
     Enums.MOVEMENT_STATES.HURT:
       start_movement_hurt_state(delta);
   #end match
@@ -208,11 +219,13 @@ func process_movement_running_state(delta) -> void:
     Enums.MOVEMENT_STATES.FALLING:
       run_movement_falling_state(delta);
     Enums.MOVEMENT_STATES.CROUCHING:
-      pass;
+      run_movement_crouching_state(delta);
     Enums.MOVEMENT_STATES.ROLLING:
-      pass;
+      run_movement_rolling_state(delta);
     Enums.MOVEMENT_STATES.LADDER:
-      pass;
+      run_movement_ladder_state(delta);
+    Enums.MOVEMENT_STATES.HANGING:
+      run_movement_hanging_state(delta);
     Enums.MOVEMENT_STATES.HURT:
       run_movement_hurt_state(delta);
   #end match
@@ -231,11 +244,13 @@ func process_movement_ending_state(delta) -> void:
     Enums.MOVEMENT_STATES.FALLING:
       end_movement_falling_state(delta);
     Enums.MOVEMENT_STATES.CROUCHING:
-      pass;
+      end_movement_crouching_state(delta);
     Enums.MOVEMENT_STATES.ROLLING:
-      pass;
+      end_movement_rolling_state(delta);
     Enums.MOVEMENT_STATES.LADDER:
-      pass;
+      end_movement_ladder_state(delta);
+    Enums.MOVEMENT_STATES.HANGING:
+      end_movement_hanging_state(delta);
     Enums.MOVEMENT_STATES.HURT:
       end_movement_hurt_state(delta);
   #end match
@@ -270,7 +285,7 @@ func start_movement_running_state(delta) -> void:
 func start_movement_jumping_state(delta) -> void:
   $JumpTimer.start();
   update_vertical_velocity(delta);
-  input_data["char_jump_held_time"] = CharStats.MAX_INPUT_BUFFER_TIME + .1; #prevent double jump from wall buffer
+  input_data[Enums.IN_BUFFER.JUMP_TIME] = CharStats.MAX_INPUT_BUFFER_TIME + 1.0; #prevent double jump near ledges
   coyote_time_remaining = 0.0;
   stop_attacking(true);
   if is_on_floor():
@@ -280,6 +295,32 @@ func start_movement_jumping_state(delta) -> void:
 func start_movement_falling_state(delta) -> void:
   update_vertical_velocity(delta);
 # end start_movement_falling_state
+
+func start_movement_crouching_state(_delta) -> void:
+  velocity.x = 0.0;
+  $PhysicsShape.disabled = true;
+  $InteractionArea/Shape.disabled = true;
+  $PhysicsShapeCrouch.disabled = false;
+  $InteractionArea/ShapeCrouch.disabled = false;
+# end end_movement_running_state
+
+func start_movement_rolling_state(_delta) -> void:
+  input_data[Enums.IN_BUFFER.JUMP_TIME] = CharStats.MAX_INPUT_BUFFER_TIME + 1.0; #prevent jump on roll
+  $PhysicsShape.disabled = true;
+  $InteractionArea/Shape.disabled = true;
+  $PhysicsShapeCrouch.disabled = false;
+  $InteractionArea/ShapeCrouch.disabled = false;
+  $RollTimer.start();
+  dash_driection = $Sprite.scale.x;
+# end end_movement_running_state
+
+func start_movement_ladder_state(_delta) -> void:
+  pass;
+# end end_movement_running_state
+
+func start_movement_hanging_state(_delta) -> void:
+  pass;
+# end end_movement_running_state
 
 func start_movement_hurt_state(_delta) -> void:
   $HurtTimer.start();
@@ -305,6 +346,8 @@ func run_movement_idle_state(delta) -> void:
     change_movement_state(Enums.MOVEMENT_STATES.FALLING);
   elif(is_attempting_run(delta)):
     change_movement_state(Enums.MOVEMENT_STATES.RUNNING);
+  elif(is_attempting_crouch()):
+    change_movement_state(Enums.MOVEMENT_STATES.CROUCHING);
   else:
     update_horizontal_velocity(delta);
     update_vertical_velocity(delta);
@@ -321,6 +364,8 @@ func run_movement_running_state(delta) -> void:
     change_movement_state(Enums.MOVEMENT_STATES.FALLING);
   elif(velocity.x == 0.0 || is_on_wall()):
     change_movement_state(Enums.MOVEMENT_STATES.IDLE);
+  elif(is_attempting_crouch()):
+    change_movement_state(Enums.MOVEMENT_STATES.CROUCHING);
   else:
     update_horizontal_velocity(delta);
     update_vertical_velocity(delta);
@@ -359,6 +404,53 @@ func run_movement_falling_state(delta) -> void:
   # end if
 # end run_movement_falling_state
 
+func run_movement_crouching_state(delta) -> void:
+  if(is_jump_buffered()):
+    change_movement_state(Enums.MOVEMENT_STATES.ROLLING);
+  elif(is_standing_safe()):
+    if(!is_on_floor()):
+      change_movement_state(Enums.MOVEMENT_STATES.FALLING);
+    elif(is_attempting_stand()):
+      change_movement_state(Enums.MOVEMENT_STATES.IDLE);
+  else:
+    update_vertical_velocity(delta);
+  # end if
+# end end_movement_running_state
+
+func run_movement_rolling_state(delta) -> void:
+  if(is_standing_safe()):
+    if(is_jump_buffered()):
+      change_movement_state(Enums.MOVEMENT_STATES.JUMPING);
+      return;
+    elif(!is_on_floor()):
+      change_movement_state(Enums.MOVEMENT_STATES.FALLING);
+      return;
+    elif $RollTimer.is_stopped() || is_on_wall():
+      if(is_attempting_stand()):
+        change_movement_state(Enums.MOVEMENT_STATES.IDLE);
+        return;
+      else:
+        change_movement_state(Enums.MOVEMENT_STATES.CROUCHING);
+        return;
+      # end if
+    # end if
+  elif(is_on_wall() && is_on_floor() && $RollFlipTimer.is_stopped()):
+    dash_driection *= -1;
+    $RollFlipTimer.start();
+    return;
+  # end if
+  update_horizontal_velocity(delta);
+  update_vertical_velocity(delta);
+# end end_movement_running_state
+
+func run_movement_ladder_state(_delta) -> void:
+  pass;
+# end end_movement_running_state
+
+func run_movement_hanging_state(_delta) -> void:
+  pass;
+# end end_movement_running_state
+
 func run_movement_hurt_state(delta) -> void:
   update_horizontal_velocity(delta);
   update_vertical_velocity(delta);
@@ -380,7 +472,6 @@ func end_movement_running_state(_delta) -> void:
 
 func end_movement_jumping_state(_delta) -> void:
   $JumpTimer.stop();
-  # end if
 # end end_movement_jumping_state
 
 func end_movement_falling_state(_delta) -> void:
@@ -389,6 +480,32 @@ func end_movement_falling_state(_delta) -> void:
   # end if
 # end end_movement_falling_state
 
+func end_movement_crouching_state(_delta) -> void:
+  if(next_movement_state != Enums.MOVEMENT_STATES.ROLLING):
+    $PhysicsShape.disabled = false;
+    $InteractionArea/Shape.disabled = false;
+    $PhysicsShapeCrouch.disabled = true;
+    $InteractionArea/ShapeCrouch.disabled = true;
+  # end if
+# end end_movement_running_state
+
+func end_movement_rolling_state(_delta) -> void:
+  if(next_movement_state != Enums.MOVEMENT_STATES.CROUCHING):
+    $PhysicsShape.disabled = false;
+    $InteractionArea/Shape.disabled = false;
+    $PhysicsShapeCrouch.disabled = true;
+    $InteractionArea/ShapeCrouch.disabled = true;
+  # end if
+# end end_movement_running_state
+
+func end_movement_ladder_state(_delta) -> void:
+  pass;
+# end end_movement_running_state
+
+func end_movement_hanging_state(_delta) -> void:
+  pass;
+# end end_movement_running_state
+
 func end_movement_hurt_state(_delta) -> void: 
   pass;
 # end run_movement_hurt_state
@@ -396,15 +513,17 @@ func end_movement_hurt_state(_delta) -> void:
 
 #region MOVEMENT UTILITY FUNCTIONS =================================================================
 func update_horizontal_velocity(delta) -> void:
-  if($InputDelayTimer.is_stopped() && input_data["char_h"]):
-    velocity.x = move_toward(velocity.x, input_data["char_h"] * CharStats.TOTAL_WALK_SPEED, CharStats.TOTAL_WALK_SPEED * delta * LERP_SPEED);
+  if(movement_state == Enums.MOVEMENT_STATES.ROLLING):
+    velocity.x = CharStats.TOTAL_ROLL_SPEED * dash_driection;
+  if($InputDelayTimer.is_stopped() && input_data[Enums.IN_BUFFER.X]):
+    velocity.x = move_toward(velocity.x, input_data[Enums.IN_BUFFER.X] * CharStats.TOTAL_WALK_SPEED, CharStats.TOTAL_WALK_SPEED * delta * LERP_SPEED);
   else:
     velocity.x = move_toward(velocity.x, 0, CharStats.TOTAL_WALK_SPEED * delta * (LERP_SPEED if is_on_floor() else 1.0));
   #end if
 # end updateVelocity
 
 func update_vertical_velocity(delta) -> void:
-  if(movement_state == Enums.MOVEMENT_STATES.JUMPING && input_data["char_jump_held"] && !$JumpTimer.is_stopped()):
+  if(movement_state == Enums.MOVEMENT_STATES.JUMPING && input_data[Enums.IN_BUFFER.JUMP_HELD] && !$JumpTimer.is_stopped()):
     velocity.y = CharStats.TOTAL_JUMP_VELOCITY * -1;
   elif (!is_on_floor() || (movement_state == Enums.MOVEMENT_STATES.HURT && velocity.y < 0)):
     velocity.y = clamp(velocity.y + (gravity * delta * 2), -CharStats.MAX_VELOCITY, CharStats.MAX_VELOCITY)
@@ -418,12 +537,24 @@ func can_jump() -> bool:
 # end can_jump
 
 func is_jump_buffered() -> bool:
-  return can_jump() && (input_data["char_jump_pressed"] || (input_data["char_jump_held"] && input_data["char_jump_held_time"] <= CharStats.MAX_INPUT_BUFFER_TIME));
+  return can_jump() && (input_data[Enums.IN_BUFFER.JUMP_PRESSED] || (input_data[Enums.IN_BUFFER.JUMP_HELD] && input_data[Enums.IN_BUFFER.JUMP_TIME] <= CharStats.MAX_INPUT_BUFFER_TIME));
 # end is_jump_buffered
+
+func is_attempting_crouch() -> bool:
+  return is_on_floor() && input_data[Enums.IN_BUFFER.Y] > 0.0 + Settings.stick_deadzone;
+# end is_attempting_crouch
+
+func is_attempting_stand() -> bool:
+  return is_on_floor() && input_data[Enums.IN_BUFFER.Y] <= 0.0 + Settings.stick_deadzone;
+# end is_attempting_stand
+
+func is_standing_safe() -> bool:
+  return !$SafeStand/RayCast2D.is_colliding() && !$SafeStand/RayCast2D2.is_colliding();
+# end is_standing_safe
 
 func is_attempting_run(delta) -> bool:
   update_horizontal_velocity(delta);
-  return $InputDelayTimer.is_stopped() && (input_data["char_h"] != 0.0) && is_on_floor() && !is_input_toward_wall && !test_move(global_transform, velocity * delta);
+  return $InputDelayTimer.is_stopped() && (abs(input_data[Enums.IN_BUFFER.X]) >= 0.0 + Settings.stick_deadzone) && is_on_floor() && !is_input_toward_wall && !test_move(global_transform, velocity * delta);
 # end is_attempting_run
 
 func update_collision_direction() -> void:
@@ -436,7 +567,7 @@ func update_collision_direction() -> void:
 # end update_collision_direction
 
 func update_input_toward_wall() -> void:
-  is_input_toward_wall = last_collision_direction != 0 && input_data["char_h"] != 0.0 && last_collision_direction == sign(input_data["char_h"]);
+  is_input_toward_wall = last_collision_direction != 0 && input_data[Enums.IN_BUFFER.X] != 0.0 && last_collision_direction == sign(input_data[Enums.IN_BUFFER.X]);
   # end if
 # end update_input_toward_wall
 
@@ -472,7 +603,7 @@ func start_attacking() -> void:
   $AttackDelayTimer.wait_time = CharStats.ATTACK_DELAY_TIMING[attack_state];
   $AttackTimer.start();
   $AttackDelayTimer.start();
-  input_data["char_attack_held_time"] = CharStats.MAX_INPUT_BUFFER_TIME + .1; #prevent double jump from wall buffer
+  input_data[Enums.IN_BUFFER.ATTACK_TIME] = CharStats.MAX_INPUT_BUFFER_TIME + .1; #prevent double jump from wall buffer
 # end start_attacking
 
 func handle_standing_attack_combo() -> void:
@@ -505,7 +636,7 @@ func stop_attacking(stopDelay: bool = false) -> void:
 # end stop_attacking
 
 func is_attack_buffered() -> bool:
-  return $InputDelayTimer.is_stopped() && $AttackDelayTimer.is_stopped() && (input_data["char_attack_pressed"] || (input_data["char_attack_held"] && input_data["char_attack_held_time"] <= CharStats.MAX_INPUT_BUFFER_TIME))
+  return $InputDelayTimer.is_stopped() && $AttackDelayTimer.is_stopped() && (input_data[Enums.IN_BUFFER.ATTACK_PRESSED] || (input_data[Enums.IN_BUFFER.ATTACK_HELD] && input_data[Enums.IN_BUFFER.ATTACK_TIME] <= CharStats.MAX_INPUT_BUFFER_TIME))
 # end is_attack_buffered
 #endregion
 
@@ -516,8 +647,8 @@ func set_sprite_facing(ignore_timer: bool = false) -> void:
       $Sprite.scale.x = 1;
     elif velocity.x < 0:
       $Sprite.scale.x = -1;
-    elif velocity.x == 0 && input_data["char_h"] != 0:
-      $Sprite.scale.x = roundi(input_data["char_h"]);
+    elif velocity.x == 0 && (abs(input_data[Enums.IN_BUFFER.X]) >= 0.0 + Settings.stick_deadzone):
+      $Sprite.scale.x = 1 if input_data[Enums.IN_BUFFER.X] > 0.0 else -1;
     # end if
   # end if
   
@@ -555,6 +686,11 @@ func update_sprite() -> void:
       Enums.MOVEMENT_STATES.FALLING:
         if $Sprite/Anim.get_assigned_animation() != "falling":
           $Sprite/Anim.play("falling");
+      Enums.MOVEMENT_STATES.CROUCHING:
+        if $Sprite/Anim.get_assigned_animation() != "crouching":
+          $Sprite/Anim.play("crouching");
+      Enums.MOVEMENT_STATES.ROLLING:
+          $Sprite/Anim.play("rolling");
     #end match
 # end update_sprite
 #endregion

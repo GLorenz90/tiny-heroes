@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://c5mxdkbljpq8j"]
+[gd_scene load_steps=16 format=3 uid="uid://c5mxdkbljpq8j"]
 
 [ext_resource type="Script" uid="uid://dmxlwah1hvr5y" path="res://scenes/player/player_character.gd" id="1_56udc"]
 [ext_resource type="Shape2D" uid="uid://dxnajkbumilxf" path="res://resources/player_shape.tres" id="2_e1j0t"]
+[ext_resource type="Shape2D" uid="uid://c5cw3ra537wn1" path="res://resources/player_crouching_shape.tres" id="3_0icub"]
 [ext_resource type="Texture2D" uid="uid://cedyrtuag5yu" path="res://images/player/owlet-normal.png" id="3_s66ro"]
 
 [sub_resource type="Animation" id="Animation_s66ro"]
@@ -29,6 +30,23 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [Vector2i(0, 5)]
+}
+
+[sub_resource type="Animation" id="Animation_gr6m2"]
+resource_name = "crouching"
+length = 0.26667336
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.20000002),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [59, 60, 61, 62]
 }
 
 [sub_resource type="Animation" id="Animation_f85ux"]
@@ -134,6 +152,24 @@ tracks/0/keys = {
 "values": [27, 28, 41, 31, 32]
 }
 
+[sub_resource type="Animation" id="Animation_xhqn0"]
+resource_name = "rolling"
+length = 0.40000668
+loop_mode = 1
+step = 0.06666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.20000002, 0.26666668, 0.33333334),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [62, 82, 83, 84, 85, 86]
+}
+
 [sub_resource type="Animation" id="Animation_0icub"]
 resource_name = "running"
 length = 0.40000668
@@ -155,12 +191,14 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_n4nw3"]
 _data = {
 &"RESET": SubResource("Animation_s66ro"),
+&"crouching": SubResource("Animation_gr6m2"),
 &"falling": SubResource("Animation_f85ux"),
 &"hurt": SubResource("Animation_t1eku"),
 &"idle": SubResource("Animation_e1j0t"),
 &"jumping": SubResource("Animation_ocp37"),
 &"punch_1": SubResource("Animation_ryjgy"),
 &"punch_2": SubResource("Animation_wvac4"),
+&"rolling": SubResource("Animation_xhqn0"),
 &"running": SubResource("Animation_0icub")
 }
 
@@ -172,19 +210,6 @@ floor_block_on_wall = false
 floor_snap_length = 2.0
 safe_margin = 0.2
 script = ExtResource("1_56udc")
-
-[node name="PhysicsShape" type="CollisionShape2D" parent="."]
-position = Vector2(0, -12)
-shape = ExtResource("2_e1j0t")
-debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
-
-[node name="InteractionArea" type="Area2D" parent="."]
-collision_mask = 108
-
-[node name="Shape" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(0, -12)
-shape = ExtResource("2_e1j0t")
-debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
 
 [node name="Sprite" type="Node2D" parent="."]
 
@@ -202,6 +227,29 @@ libraries = {
 }
 autoplay = "idle"
 
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -12)
+shape = ExtResource("2_e1j0t")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
+[node name="PhysicsShapeCrouch" type="CollisionShape2D" parent="."]
+position = Vector2(0, -7)
+shape = ExtResource("3_0icub")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
+[node name="InteractionArea" type="Area2D" parent="."]
+collision_mask = 108
+
+[node name="Shape" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(0, -12)
+shape = ExtResource("2_e1j0t")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
+[node name="ShapeCrouch" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(0, -7)
+shape = ExtResource("3_0icub")
+debug_color = Color(0, 0.57546985, 0.82127774, 0.41960785)
+
 [node name="ProjectileAreas" type="Node2D" parent="."]
 
 [node name="Punch" type="Marker2D" parent="ProjectileAreas"]
@@ -217,20 +265,34 @@ position = Vector2(12, -10)
 [node name="SafeGround" type="Node2D" parent="."]
 
 [node name="RayCast2D" type="RayCast2D" parent="SafeGround"]
-position = Vector2(-7, -1)
-target_position = Vector2(0, 10)
+position = Vector2(-5, -4)
+target_position = Vector2(0, 12)
 collision_mask = 2
 
 [node name="RayCast2D2" type="RayCast2D" parent="SafeGround"]
-position = Vector2(7, -1)
-target_position = Vector2(0, 10)
+position = Vector2(5, -4)
+target_position = Vector2(0, 12)
 collision_mask = 2
 
-[node name="DashTimer" type="Timer" parent="."]
+[node name="SafeStand" type="Node2D" parent="."]
+position = Vector2(0, -14)
+rotation = 3.1415927
+
+[node name="RayCast2D" type="RayCast2D" parent="SafeStand"]
+position = Vector2(-5, -0.9999992)
+target_position = Vector2(0, 12)
+collision_mask = 2
+
+[node name="RayCast2D2" type="RayCast2D" parent="SafeStand"]
+position = Vector2(5, -1.0000008)
+target_position = Vector2(0, 12)
+collision_mask = 2
+
+[node name="RollTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="DashGhostCreateTimer" type="Timer" parent="."]
-wait_time = 0.05
+[node name="RollFlipTimer" type="Timer" parent="."]
+wait_time = 0.2
 one_shot = true
 
 [node name="JumpTimer" type="Timer" parent="."]

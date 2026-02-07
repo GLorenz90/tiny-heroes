@@ -5,7 +5,8 @@ var main: Main;
 var device_manager: DeviceManager;
 var input_manager: InputManager;
 var music_manager: MusicManager;
-var debug_label: Control;
+var p1_debug_label: Control;
+var p2_debug_label: Control;
 
 var p1_char: PlayerCharacter;
 var p1_char_display: Enums.CHARS = Enums.CHARS.OWLET;

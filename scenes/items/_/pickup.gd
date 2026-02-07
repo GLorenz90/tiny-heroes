@@ -3,7 +3,7 @@ class_name Pickup
 
 @export var health_value := 0;
 @export var money_value := 0;
-@export_range(0.0, 15.0, 1.0) var anim_offset := 0.0;
+@export_range(0.0, 8.0, 1.0) var anim_offset := 0.0;
 @export var physics_enabled := false;
 @export var effect_scene: PackedScene;
 

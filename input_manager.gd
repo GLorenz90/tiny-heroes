@@ -9,6 +9,10 @@ enum INPUTS {
   DOWN,
   LEFT,
   RIGHT,
+  UP_ALT,
+  DOWN_ALT,
+  LEFT_ALT,
+  RIGHT_ALT,
   JUMP,
   ATTACK,
   INTERACT,
@@ -34,6 +38,10 @@ var p1_action_map: Dictionary[INPUTS, InputEvent] = {
   INPUTS.DOWN: null,
   INPUTS.LEFT: null,
   INPUTS.RIGHT: null,
+  INPUTS.UP_ALT: null,
+  INPUTS.DOWN_ALT: null,
+  INPUTS.LEFT_ALT: null,
+  INPUTS.RIGHT_ALT: null,
   INPUTS.JUMP: null,
   INPUTS.ATTACK: null,
   INPUTS.INTERACT: null,
@@ -53,6 +61,21 @@ var p1_cur_action_state: Dictionary = {
   ACTIONS.CANCEL: false
 };
 
+const template_input_buffer: Dictionary= {
+  Enums.IN_BUFFER.X: 0.0,
+  Enums.IN_BUFFER.Y: 0.0,
+  Enums.IN_BUFFER.VECTOR: Vector2(0.0, 0.0),
+  Enums.IN_BUFFER.ATTACK_PRESSED: false,
+  Enums.IN_BUFFER.ATTACK_HELD: false,
+  Enums.IN_BUFFER.ATTACK_TIME: 0.0,
+  Enums.IN_BUFFER.JUMP_PRESSED: false,
+  Enums.IN_BUFFER.JUMP_HELD: false,
+  Enums.IN_BUFFER.JUMP_TIME: 0.0,
+  Enums.IN_BUFFER.INTERACT_PRESSED: false,
+  Enums.IN_BUFFER.INTERACT_HELD: false,
+  Enums.IN_BUFFER.INTERACT_TIME: 0.0
+};
+
 var p1_prev_action_state = p1_cur_action_state.duplicate();
 var p1_just_pressed_action_state = p1_cur_action_state.duplicate();
 
@@ -61,20 +84,6 @@ var p2_cur_action_state = p1_cur_action_state.duplicate();
 var p2_prev_action_state = p1_cur_action_state.duplicate();
 var p2_just_pressed_action_state = p1_cur_action_state.duplicate();
 
-const template_input_buffer := {
-  "char_h": 0.0,
-  "char_v": 0.0,
-  "char_vector": Vector2(0.0, 0.0),
-  "char_attack_pressed": false,
-  "char_attack_held": false,
-  "char_attack_held_time": 0.0,
-  "char_jump_pressed": false,
-  "char_jump_held": false,
-  "char_jump_held_time": 0.0,
-  "char_interact_pressed": false,
-  "char_interact_held": false,
-  "char_interact_held_time": 0.0
-};
 var p1_input_buffer := template_input_buffer.duplicate();
 var p2_input_buffer := template_input_buffer.duplicate();
 
@@ -108,6 +117,10 @@ func setup_default_controls() -> void:
   set_joypad_button_action(2, INPUTS.DOWN, JOY_BUTTON_DPAD_DOWN);
   set_joypad_button_action(2, INPUTS.LEFT, JOY_BUTTON_DPAD_LEFT);
   set_joypad_button_action(2, INPUTS.RIGHT, JOY_BUTTON_DPAD_RIGHT);
+  set_joypad_axis_action(2, INPUTS.UP_ALT, JOY_AXIS_LEFT_Y, -1);
+  set_joypad_axis_action(2, INPUTS.DOWN_ALT, JOY_AXIS_LEFT_Y, 1);
+  set_joypad_axis_action(2, INPUTS.LEFT_ALT, JOY_AXIS_LEFT_X, -1);
+  set_joypad_axis_action(2, INPUTS.RIGHT_ALT, JOY_AXIS_LEFT_X, 1);
   set_joypad_button_action(2, INPUTS.JUMP, JOY_BUTTON_A);
   set_joypad_button_action(2, INPUTS.ATTACK, JOY_BUTTON_X);
   set_joypad_button_action(2, INPUTS.INTERACT, JOY_BUTTON_Y);
@@ -124,8 +137,11 @@ func process_action_state(player: int) -> void:
   
   player_prev_action_state = player_cur_action_state;
   
-  player_cur_action_state[ACTIONS.MOVE_X] = get_axis(player, INPUTS.LEFT, INPUTS.RIGHT);
-  player_cur_action_state[ACTIONS.MOVE_Y] = get_axis(player, INPUTS.DOWN, INPUTS.UP);
+  var move_x = clampf(get_axis(player, INPUTS.LEFT, INPUTS.RIGHT) + get_axis(player, INPUTS.LEFT_ALT, INPUTS.RIGHT_ALT), -1.0, 1.0);
+  var move_y = clampf(get_axis(player, INPUTS.UP, INPUTS.DOWN) + get_axis(player, INPUTS.UP_ALT, INPUTS.DOWN_ALT), -1.0, 1.0);
+  player_cur_action_state[ACTIONS.MOVE_X] = move_x;
+  player_cur_action_state[ACTIONS.MOVE_Y] = move_y;
+  
   player_cur_action_state[ACTIONS.JUMP] = is_action_pressed(player, INPUTS.JUMP);
   player_cur_action_state[ACTIONS.ATTACK] = is_action_pressed(player, INPUTS.ATTACK);
   player_cur_action_state[ACTIONS.INTERACT] = is_action_pressed(player, INPUTS.INTERACT);
@@ -159,22 +175,22 @@ func set_key_action(player: int, action: INPUTS, keycode: Key) -> void:
   # end if
 # end add_key_action
 
-func set_joypad_button_action(player: int, action: INPUTS, button: JoyButton, device_id: int = -1) -> void:
+func set_joypad_button_action(player: int, action: INPUTS, button: JoyButton) -> void:
   var player_action_map = p1_action_map if player == 1 else p2_action_map;
   var event := InputEventJoypadButton.new();
   event.button_index = button;
-  event.device = device_id;
+  event.device = p1_device.device_id if player == 1 else p2_device.device_id;
   
   player_action_map[action] = event;
   # end if
 # end add_joypad_button_action
 
-func set_joypad_axis_action(player: int, action: INPUTS, axis: JoyAxis, axis_value: float, device_id: int = -1) -> void:
+func set_joypad_axis_action(player: int, action: INPUTS, axis: JoyAxis, axis_value: float) -> void:
   var player_action_map = p1_action_map if player == 1 else p2_action_map;
   var event := InputEventJoypadMotion.new();
   event.axis = axis;
   event.axis_value = axis_value;
-  event.device = device_id;
+  event.device = p1_device.device_id if player == 1 else p2_device.device_id;
   
   player_action_map[action] = event;
   # end if
@@ -228,7 +244,7 @@ func get_axis(player: int, negative_action: INPUTS, positive_action: INPUTS) -> 
   elif neg_event is InputEventJoypadMotion && player_device.type == Enums.INPUT_SOURCES.CONTROLLER:
     var axis_val := Input.get_joy_axis(player_device.device_id, player_action_map[negative_action].axis);
     var neg_axis : InputEventJoypadMotion = neg_event;
-    neg_event = axis_val if sign(axis_val) == sign(neg_axis.axis_value) && abs(axis_val) >= Settings.stick_deadzone else 0.0;
+    neg_value = axis_val if sign(axis_val) == sign(neg_axis.axis_value) && abs(axis_val) >= Settings.stick_deadzone else 0.0;
   # end if
   
   if pos_event is InputEventKey && player_device.type == Enums.INPUT_SOURCES.KEYBOARD:
@@ -238,9 +254,8 @@ func get_axis(player: int, negative_action: INPUTS, positive_action: INPUTS) -> 
   elif pos_event is InputEventJoypadMotion && player_device.type == Enums.INPUT_SOURCES.CONTROLLER:
     var axis_val := Input.get_joy_axis(player_device.device_id, player_action_map[negative_action].axis);
     var pos_axis : InputEventJoypadMotion = pos_event;
-    pos_event = abs(axis_val) if sign(axis_val) == sign(pos_axis.axis_value) && abs(axis_val) >= Settings.stick_deadzone else 0.0;
+    pos_value = axis_val if sign(axis_val) == sign(pos_axis.axis_value) && abs(axis_val) >= Settings.stick_deadzone else 0.0;
   # end if
-  
   return pos_value + neg_value;
 # end get_axis
 
@@ -250,21 +265,21 @@ func process_input_buffer(player: int, delta: float) -> void:
   var player_just_pressed_action_state = p1_just_pressed_action_state if player == 1 else p2_just_pressed_action_state;
   
   var player_input_buffer = {
-    "char_h": player_cur_action_state[ACTIONS.MOVE_X],
-    "char_v": player_cur_action_state[ACTIONS.MOVE_Y],
-    "char_vector": Vector2(player_cur_action_state[ACTIONS.MOVE_X], player_cur_action_state[ACTIONS.MOVE_Y]),
+    Enums.IN_BUFFER.X: player_cur_action_state[ACTIONS.MOVE_X],
+    Enums.IN_BUFFER.Y: player_cur_action_state[ACTIONS.MOVE_Y],
+    Enums.IN_BUFFER.VECTOR: Vector2(player_cur_action_state[ACTIONS.MOVE_X], player_cur_action_state[ACTIONS.MOVE_Y]),
     
-    "char_attack_pressed": player_just_pressed_action_state[ACTIONS.ATTACK],
-    "char_attack_held": player_cur_action_state[ACTIONS.ATTACK],
-    "char_attack_held_time": prev_player_input_buffer["char_attack_held_time"] + delta if player_cur_action_state[ACTIONS.ATTACK] else 0.0,
+    Enums.IN_BUFFER.ATTACK_PRESSED: player_just_pressed_action_state[ACTIONS.ATTACK],
+    Enums.IN_BUFFER.ATTACK_HELD: player_cur_action_state[ACTIONS.ATTACK],
+    Enums.IN_BUFFER.ATTACK_TIME: prev_player_input_buffer[Enums.IN_BUFFER.ATTACK_TIME] + delta if player_cur_action_state[ACTIONS.ATTACK] else 0.0,
     
-    "char_jump_pressed": player_just_pressed_action_state[ACTIONS.JUMP],
-    "char_jump_held": player_cur_action_state[ACTIONS.JUMP],
-    "char_jump_held_time": prev_player_input_buffer["char_jump_held_time"] + delta if player_cur_action_state[ACTIONS.JUMP] else 0.0,
+    Enums.IN_BUFFER.JUMP_PRESSED: player_just_pressed_action_state[ACTIONS.JUMP],
+    Enums.IN_BUFFER.JUMP_HELD: player_cur_action_state[ACTIONS.JUMP],
+    Enums.IN_BUFFER.JUMP_TIME: prev_player_input_buffer[Enums.IN_BUFFER.JUMP_TIME] + delta if player_cur_action_state[ACTIONS.JUMP] else 0.0,
     
-    "char_interact_pressed": player_just_pressed_action_state[ACTIONS.INTERACT],
-    "char_interact_held": player_cur_action_state[ACTIONS.INTERACT],
-    "char_interact_held_time": prev_player_input_buffer["char_interact_held_time"] + delta if player_cur_action_state[ACTIONS.INTERACT] else 0.0
+    Enums.IN_BUFFER.INTERACT_PRESSED: player_just_pressed_action_state[ACTIONS.INTERACT],
+    Enums.IN_BUFFER.INTERACT_HELD: player_cur_action_state[ACTIONS.INTERACT],
+    Enums.IN_BUFFER.INTERACT_TIME: prev_player_input_buffer[Enums.IN_BUFFER.INTERACT_TIME] + delta if player_cur_action_state[ACTIONS.INTERACT] else 0.0
   };
   
   if(player == 1):

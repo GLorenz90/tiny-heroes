@@ -56,11 +56,10 @@ size = Vector2i(296, 256)
 render_target_update_mode = 4
 
 [node name="P1Cam" type="Camera2D" parent="HBoxContainer/SubViewportContainer/SubViewport"]
+visibility_layer = 3
 position = Vector2(147, 128)
 limit_left = 0
 limit_top = 0
-limit_bottom = 256
-position_smoothing_enabled = true
 position_smoothing_speed = 15.0
 
 [node name="SubViewportContainer2" type="SubViewportContainer" parent="HBoxContainer"]
@@ -75,10 +74,8 @@ size = Vector2i(296, 256)
 render_target_update_mode = 4
 
 [node name="P2Cam" type="Camera2D" parent="HBoxContainer/SubViewportContainer2/SubViewport"]
-visibility_layer = 2
+visibility_layer = 5
 position = Vector2(148, 128)
 limit_left = 0
 limit_top = 0
-limit_bottom = 256
-position_smoothing_enabled = true
 position_smoothing_speed = 10.0

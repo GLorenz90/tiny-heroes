@@ -7,7 +7,7 @@ const MAX_INPUT_BUFFER_TIME := 0.2;
 const WALL_NUDGE_SPEED := 50.0;
 
 const BASE_WALK_SPEED := 100.0;
-const BASE_ROLL_SPEED := 350.0;
+const BASE_ROLL_SPEED := 150.0;
 const BASE_ROLL_TIME := 0.4;
 const BASE_JUMP_TIME := 0.08;
 const BASE_JUMP_VELOCITY := 200.0;

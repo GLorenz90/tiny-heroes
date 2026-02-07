@@ -1,7 +1,7 @@
 extends Node2D
 class_name Main
 
-const first_level = preload("uid://btl3e5lc6dq5e");
+const first_level = preload("uid://btl3e5lc6dq5e")
 const one_cam_view = preload("uid://rsclqkvvvl0y");
 const two_cam_view = preload("uid://3rpiy63a7deb");
 
@@ -15,11 +15,12 @@ func _init():
 # end _init
 
 func _ready():
-  Global.debug_label = $DebugLabel;
+  Global.p1_debug_label = $P1DebugLabel;
+  Global.p2_debug_label = $P2DebugLabel;
 # end _ready
 
 func start_game() -> void:
-  var new_view = one_cam_view.instantiate();
+  var new_view = two_cam_view.instantiate();
   scene_parent.add_child(new_view);
   
   var new_scene = first_level.instantiate();

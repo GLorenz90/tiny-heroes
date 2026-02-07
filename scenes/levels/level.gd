@@ -28,6 +28,8 @@ func _ready():
         new_background.mid_bg = mid_bg;
       if near_bg != null:
         new_background.near_bg = near_bg;
+        
+      new_background.visibility_layer = 2;
       
       Global.p1_cam.add_sibling(new_background);
     # end if
@@ -44,6 +46,7 @@ func _ready():
       if near_bg != null:
         new_background.near_bg = near_bg;
       
+      new_background.visibility_layer = 4;
       Global.p2_cam.add_sibling(new_background);
     # end if
   # end if
